@@ -1,0 +1,57 @@
+services:
+
+  eureka-server:
+    image: eureka-server:1.0
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    restart: on-failure
+
+  producto-service:
+    image: producto-service:1.0
+    build:
+      context: ./producto-service
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: "8084"
+      EUREKA_ENABLED: "true"
+      EUREKA_URL: "http://eureka-server:8761/eureka"
+    depends_on:
+      - eureka-server
+    restart: on-failure
+
+  usuario-service:
+    image: usuario-service:1.0
+    build:
+      context: ./usuario-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      PORT: "8082"
+      EUREKA_ENABLED: "true"
+      EUREKA_URL: "http://eureka-server:8761/eureka"
+    depends_on:
+      - eureka-server
+    restart: on-failure
+
+  gateway-service:
+    image: gateway-service:1.0
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    environment:
+      PORT: "8083"
+      EUREKA_ENABLED: "true"
+      EUREKA_URL: "http://eureka-server:8761/eureka"
+    depends_on:
+      - eureka-server
+      - producto-service
+      - usuario-service
+    restart: on-failure
