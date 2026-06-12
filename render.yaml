@@ -34,13 +34,12 @@ services:
     envVars:
       - key: PORT
         value: "8081"
+
       - key: EUREKA_ENABLED
         value: "true"
-      - key: EUREKA_HOSTPORT
-        fromService:
-          type: web
-          name: eureka-server
-          property: hostport
+
+      - key: EUREKA_URL
+        value: "https://eureka-server-sfym.onrender.com/eureka"
 
   # =========================================================
   # 3. MICROSERVICIO DE USUARIOS
@@ -58,13 +57,12 @@ services:
     envVars:
       - key: PORT
         value: "8082"
+
       - key: EUREKA_ENABLED
         value: "true"
-      - key: EUREKA_HOSTPORT
-        fromService:
-          type: web
-          name: eureka-server
-          property: hostport
+
+      - key: EUREKA_URL
+        value: "https://eureka-server-sfym.onrender.com/eureka"
 
   # =========================================================
   # 4. API GATEWAY
@@ -78,14 +76,14 @@ services:
     rootDir: gateway-service
     dockerfilePath: ./Dockerfile
     dockerContext: .
+    healthCheckPath: /
     autoDeployTrigger: commit
     envVars:
       - key: PORT
         value: "8083"
+
       - key: EUREKA_ENABLED
         value: "true"
-      - key: EUREKA_HOSTPORT
-        fromService:
-          type: web
-          name: eureka-server
-          property: hostport
+
+      - key: EUREKA_URL
+        value: "https://eureka-server-sfym.onrender.com/eureka"
